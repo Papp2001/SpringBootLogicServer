@@ -1,0 +1,198 @@
+syntax = "proto3";
+
+option java_package = "com.example.sep3rest.protobuf";
+
+service CategoryController {
+  rpc addCategory(Category) returns (Category);
+  rpc removeCategory(Category) returns (Empty);
+  rpc getAll(Empty) returns (CategoryList);
+  rpc update(Category) returns (Category);
+}
+
+service FileController {
+  rpc upload(FileCreationDto) returns (File);
+  rpc download(Id) returns (FileDownloadDto);
+  rpc getAll(Empty) returns (FileDisplayList);
+  rpc getById(Id) returns (File);
+  rpc getByCategory(Category) returns (FileDisplayList);
+  rpc getByTitle(String) returns (FileDisplayList);
+  rpc update(FileUpdateDto) returns (File);
+  rpc remove(Id) returns (Empty);
+}
+
+service UserController {
+  rpc getByUsername(String) returns (User);
+  rpc getById(Id) returns (User);
+  rpc getAll(Empty) returns (UserList);
+  rpc create(UserCreationDto) returns (User);
+  rpc logIn(UserLogInDto) returns (UserTokenDto);
+  rpc update(UserUpdateDto) returns (User);
+  rpc remove(Id) returns (Empty);
+  rpc getAllDisplay(Empty) returns (UserDisplayDtoList);
+}
+
+service PrivateFileController {
+  rpc upload(PrivateFileCreationDto) returns (PrivateFile);
+  rpc download(Id) returns (FileDownloadDto);
+  rpc getSharedWith(User) returns (PrivateFileDisplayDtoList);
+  rpc remove(Id) returns (Empty);
+}
+
+
+message NullException {
+  string message = 1;
+}
+
+//general
+
+message Empty {}
+
+message String {
+  string string = 1;
+}
+message Id {
+  int32 id =1;
+}
+
+
+//proto for Files
+
+message File {
+  string title = 1;
+  string description = 2;
+  bytes bytes =3;
+  Category category = 4;
+  User uploadedBy = 5;
+  string contentType = 6;
+  int32 id = 7;
+}
+
+message FileCreationDto {
+  string title = 1;
+  string description = 2;
+  bytes bytes =3;
+  Category category = 4;
+  User uploadedBy = 5;
+  string contentType = 6;
+}
+
+message FileUpdateDto {
+  string title = 1;
+  string description = 2;
+  Category category = 3;
+  int32 id = 4;
+}
+
+message FileDisplayDto {
+  string title = 1;
+  string description = 2;
+  Category category = 3;
+  int32 id = 4;
+  User uploadedBy = 5;
+  string contentType = 6;
+}
+
+message FileDownloadDto {
+  string title = 1;
+  bytes bytes = 2;
+  string contentType = 3;
+}
+
+
+
+message FileList {
+  repeated File files = 1;
+}
+message FileDisplayList {
+  repeated FileDisplayDto files = 1;
+}
+
+
+// proto for Private File
+
+message PrivateFile {
+  string title =1;
+  string contentType = 2;
+  User uploadedBy =3;
+  bytes bytes = 4;
+  UserList haveAccess = 5;
+  int32 id = 6;
+}
+message PrivateFileCreationDto {
+  string title = 1;
+  string contentType = 2;
+  User uploadedBy = 3;
+  bytes bytes = 4;
+  UserList haveAccess = 5;
+}
+message PrivateFileDisplayDto {
+  string title = 1;
+  string contentType = 2;
+  User uploadedBy = 3;
+  int32 id =4;
+}
+
+message PrivateFileDisplayDtoList {
+  repeated PrivateFileDisplayDto privateFiles =1;
+}
+
+
+// proto for Users
+message User {
+  string username = 1;
+  string password = 2;
+  string name = 3;
+  bool isAdmin = 4;
+  int32 id = 5;
+}
+message UserCreationDto {
+  string username = 1;
+  string password = 2;
+  string name = 3;
+  bool isAdmin = 4;
+}
+
+message UserDisplayDto {
+  string username = 1;
+  string name = 2;
+  bool isAdmin = 3;
+}
+
+message UserUpdateDto {
+  string username = 1;
+  string password = 2;
+  string name = 3;
+}
+
+message UserLogInDto {
+  string username = 1;
+  string password = 2;
+}
+
+message UserTokenDto {
+  string username = 1;
+  string password = 2;
+  string name = 3;
+  bool isAdmin = 4;
+  int32 id = 5;
+  string token = 6;
+}
+
+message UserList {
+  repeated User users = 1;
+}
+
+message UserDisplayDtoList {
+  repeated UserDisplayDto users = 1;
+}
+
+
+// proto for Categories
+message Category {
+  int32 id =1;
+  string name = 2;
+}
+
+message CategoryList {
+  repeated Category categories = 1;
+}
